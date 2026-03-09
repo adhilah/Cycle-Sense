@@ -1,0 +1,595 @@
+/**
+ * components.css
+ * ─────────────────────────────────────────────────────────────────────────────
+ * Reusable CSS utility classes for Cycle Companion components.
+ * Must be imported AFTER tokens.css and global.css.
+ *
+ * These classes complement inline React styles — use them for
+ * patterns repeated across multiple components.
+ */
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   LAYOUT
+═══════════════════════════════════════════════════════════════════════════ */
+
+.app-shell {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  min-height: 100dvh;
+  position: relative;
+}
+
+.page-content {
+  padding: 0 var(--space-10) var(--bottom-nav-h);
+}
+
+.section-gap {
+  margin-bottom: var(--space-9);
+}
+
+/* Flex helpers */
+.row          { display: flex; align-items: center; }
+.row-between  { display: flex; align-items: center; justify-content: space-between; }
+.row-center   { display: flex; align-items: center; justify-content: center; }
+.col          { display: flex; flex-direction: column; }
+.col-center   { display: flex; flex-direction: column; align-items: center; }
+
+.gap-1  { gap: var(--space-1); }
+.gap-2  { gap: var(--space-2); }
+.gap-3  { gap: var(--space-3); }
+.gap-4  { gap: var(--space-4); }
+.gap-5  { gap: var(--space-5); }
+.gap-6  { gap: var(--space-6); }
+.gap-8  { gap: var(--space-8); }
+.gap-10 { gap: var(--space-10); }
+
+.flex-1 { flex: 1; }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TYPOGRAPHY UTILITIES
+═══════════════════════════════════════════════════════════════════════════ */
+
+.eyebrow {
+  font-size: var(--text-sm);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--color-ink-400);
+}
+
+.section-label {
+  font-size: var(--text-sm);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-ink-400);
+}
+
+.field-label {
+  font-size: var(--text-base);
+  font-weight: var(--font-medium);
+  color: var(--color-ink-700);
+}
+
+.muted {
+  color: var(--color-ink-300);
+  font-size: var(--text-sm);
+}
+
+.italic-note {
+  font-size: var(--text-sm);
+  color: var(--color-ink-400);
+  font-style: italic;
+  line-height: 1.4;
+}
+
+.display-value {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CARDS
+═══════════════════════════════════════════════════════════════════════════ */
+
+.card {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-3xl);
+  padding: var(--space-8) var(--space-9);
+  margin-bottom: var(--space-9);
+  animation: scaleIn 0.2s ease;
+}
+
+.card-sm {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5) var(--space-7);
+  margin-bottom: var(--space-4);
+}
+
+/* Stat card — used in 3-col grids */
+.stat-card {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2xl);
+  padding: 14px 12px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.stat-card__value {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  color: var(--color-ink-900);
+}
+
+.stat-card__label {
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-ink-400);
+}
+
+.stat-card__sub {
+  font-size: var(--text-xs);
+  color: var(--color-ink-200);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BUTTONS
+═══════════════════════════════════════════════════════════════════════════ */
+
+/* Primary — dark fill */
+.btn-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  width: 100%;
+  background: var(--color-ink-900);
+  color: var(--color-bg-app);
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: 10px var(--space-10);
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  font-weight: var(--font-medium);
+  letter-spacing: var(--tracking-wide);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.btn-primary:hover {
+  background: var(--color-ink-700);
+}
+
+/* Outline — bordered */
+.btn-outline {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  background: var(--color-bg-card);
+  color: var(--color-ink-900);
+  border: 1.5px solid var(--color-ink-100);
+  border-radius: var(--radius-lg);
+  padding: 7px 12px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  cursor: pointer;
+  transition: border-color var(--transition-fast);
+}
+
+.btn-outline:hover {
+  border-color: var(--color-ink-900);
+}
+
+/* Ghost — text only with underline */
+.btn-ghost {
+  background: none;
+  border: none;
+  color: var(--color-ink-300);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+}
+
+/* Danger ghost — rose text */
+.btn-danger {
+  background: none;
+  border: none;
+  color: var(--color-rose-500);
+  font-family: var(--font-body);
+  font-size: 12px;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* Icon button */
+.btn-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: var(--space-1);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.btn-icon:hover {
+  background: var(--color-border);
+}
+
+/* Toggle more/less */
+.btn-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  width: 100%;
+  background: none;
+  border: 1px solid #e8e2db;
+  border-radius: var(--radius-lg);
+  padding: var(--space-3) 0;
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--color-ink-400);
+  cursor: pointer;
+  margin-top: var(--space-1);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BADGES & CHIPS
+═══════════════════════════════════════════════════════════════════════════ */
+
+/* Generic small badge */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--text-sm);
+  border-radius: var(--radius-sm);
+  padding: 2px 7px;
+  white-space: nowrap;
+}
+
+/* Default badge — warm tint */
+.badge--default {
+  background: #f5ede8;
+  color: #7a6056;
+}
+
+/* Success badge — sage */
+.badge--success {
+  background: var(--color-sage-100);
+  color: var(--color-sage-600);
+  font-weight: var(--font-medium);
+}
+
+/* Warning badge — rose */
+.badge--warning {
+  background: var(--color-rose-100);
+  color: var(--color-rose-700);
+}
+
+/* Ongoing pulse badge */
+.badge--ongoing {
+  background: var(--color-sage-100);
+  color: var(--color-sage-600);
+  font-weight: var(--font-medium);
+  animation: pulse 2.4s ease-in-out infinite;
+}
+
+/* Symptom chip */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  border: 1.5px solid var(--color-ink-100);
+  border-radius: var(--radius-pill);
+  padding: 5px 11px;
+  font-size: 12px;
+  font-family: var(--font-body);
+  background: var(--color-bg-card);
+  color: var(--color-ink-600);
+  cursor: pointer;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+  user-select: none;
+}
+
+.chip--active {
+  background: var(--color-rose-300);
+  border-color: var(--color-rose-500);
+  color: var(--color-rose-700);
+  font-weight: var(--font-medium);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FORM ELEMENTS
+═══════════════════════════════════════════════════════════════════════════ */
+
+/* Labeled input group */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/* Slider row */
+.slider-row {
+  margin-bottom: var(--space-7);
+}
+
+.slider-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-2);
+}
+
+/* Flow intensity button row */
+.flow-btn {
+  flex: 1;
+  border: 2px solid var(--color-ink-100);
+  border-radius: var(--radius-lg);
+  padding: 7px 0;
+  font-family: var(--font-body);
+  font-size: 12px;
+  cursor: pointer;
+  text-align: center;
+  background: var(--color-bg-app);
+  color: var(--color-ink-600);
+  transition: background var(--transition-fast),
+              border-color var(--transition-fast),
+              color var(--transition-fast);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BOTTOM NAVIGATION
+═══════════════════════════════════════════════════════════════════════════ */
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  background: var(--color-bg-card);
+  border-top: 1px solid var(--color-border);
+  z-index: var(--z-nav);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.nav-item {
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 0 8px;
+  gap: var(--space-1);
+  color: var(--color-ink-300);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  transition: color var(--transition-fast);
+}
+
+.nav-item--active {
+  color: var(--color-rose-500);
+}
+
+.nav-item__dot {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: var(--radius-full);
+  background: var(--color-rose-500);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TOAST NOTIFICATION
+═══════════════════════════════════════════════════════════════════════════ */
+
+.toast {
+  position: fixed;
+  bottom: calc(var(--bottom-nav-h) + var(--space-5));
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--color-ink-900);
+  color: var(--color-bg-app);
+  padding: 9px 18px;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-lg);
+  font-size: var(--text-base);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: var(--z-toast);
+  animation: fadeUp var(--transition-slow);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   DROPDOWN MENU
+═══════════════════════════════════════════════════════════════════════════ */
+
+.dropdown {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-ink-100);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  min-width: 175px;
+  overflow: hidden;
+  z-index: var(--z-dropdown);
+}
+
+.dropdown__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: 11px 14px;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--color-ink-900);
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.dropdown__item:hover {
+  background: var(--color-bg-app);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   STORAGE PILL
+═══════════════════════════════════════════════════════════════════════════ */
+
+.storage-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--color-sage-100);
+  border-radius: var(--radius-md);
+  padding: 4px 10px;
+}
+
+.storage-pill__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: var(--color-sage-400);
+}
+
+.storage-pill__text {
+  font-size: var(--text-sm);
+  color: var(--color-sage-600);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   EMPTY STATE
+═══════════════════════════════════════════════════════════════════════════ */
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-12) 0 var(--space-10);
+  color: var(--color-ink-300);
+  font-size: var(--text-base);
+  text-align: center;
+  gap: var(--space-3);
+}
+
+.empty-state__hint {
+  font-size: 12px;
+  color: var(--color-ink-200);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   PHASE CARDS (insights grid)
+═══════════════════════════════════════════════════════════════════════════ */
+
+.phase-card {
+  border-radius: var(--radius-2xl);
+  padding: 14px var(--space-7);
+  cursor: pointer;
+  outline: 2px solid transparent;
+  transition: transform var(--transition-fast),
+              box-shadow var(--transition-fast),
+              outline-color var(--transition-fast);
+}
+
+.phase-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.phase-card--active {
+  outline-color: currentColor;
+}
+
+.phase-card__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BANNER (next period estimate)
+═══════════════════════════════════════════════════════════════════════════ */
+
+.banner {
+  border-radius: var(--radius-xl);
+  padding: 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.banner--neutral { background: var(--color-ochre-100); }
+.banner--warning { background: var(--color-rose-100); }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SVG CHART
+═══════════════════════════════════════════════════════════════════════════ */
+
+.chart-wrap {
+  width: 100%;
+  overflow: visible;
+}
+
+.chart-area {
+  fill: var(--color-bg-subtle);
+}
+
+.chart-line {
+  fill: none;
+  stroke: var(--color-rose-500);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.chart-dot {
+  fill: var(--color-rose-500);
+}
+
+.chart-label {
+  font-family: var(--font-body);
+  fill: var(--color-ink-300);
+}
+
+.chart-value {
+  font-family: var(--font-body);
+  fill: #7a6056;
+}

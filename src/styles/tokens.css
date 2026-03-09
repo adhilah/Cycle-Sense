@@ -1,0 +1,158 @@
+/**
+ * tokens.css
+ * ─────────────────────────────────────────────────────────────────────────────
+ * Design tokens for Cycle Companion.
+ * All colors, spacing, typography, border-radius and shadow values
+ * are defined here as CSS custom properties.
+ *
+ * Import order: tokens.css → global.css → components.css
+ *
+ * Usage in CSS:
+ *   color: var(--color-rose);
+ *   padding: var(--space-4);
+ */
+
+:root {
+
+  /* ── Color palette ─────────────────────────────────────────────────────── */
+
+  /* Brand — rose (period / primary accent) */
+  --color-rose-100:   #fdf0ee;
+  --color-rose-200:   #f5d8d5;
+  --color-rose-300:   #e8d5d5;
+  --color-rose-400:   #d4857d;
+  --color-rose-500:   #c4837a;   /* primary accent */
+  --color-rose-600:   #b85a52;
+  --color-rose-700:   #8a3f38;
+
+  /* Sage — green (lifestyle / positive) */
+  --color-sage-100:   #eef7f2;
+  --color-sage-200:   #d5e8e0;
+  --color-sage-400:   #6aab8e;   /* primary sage */
+  --color-sage-600:   #4a7a62;
+  --color-sage-700:   #3a6b52;
+
+  /* Blue — insights / sleep */
+  --color-blue-100:   #f0f5fd;
+  --color-blue-200:   #d5dde8;
+  --color-blue-400:   #7a9ec4;   /* primary blue */
+
+  /* Ochre — weight / luteal phase */
+  --color-ochre-100:  #f5f0e4;
+  --color-ochre-200:  #e8e4d5;
+  --color-ochre-400:  #b5a66e;   /* primary ochre */
+  --color-ochre-600:  #8a7a48;
+
+  /* Neutrals */
+  --color-ink-900:    #2a2420;   /* primary text, save button bg */
+  --color-ink-700:    #4a3f3a;
+  --color-ink-600:    #6a5f58;
+  --color-ink-400:    #a09488;   /* muted labels */
+  --color-ink-300:    #b0a49a;
+  --color-ink-200:    #c8bfb5;
+  --color-ink-100:    #e0d9d2;   /* borders, range track */
+
+  /* Backgrounds */
+  --color-bg-app:     #faf9f7;   /* app background */
+  --color-bg-card:    #ffffff;   /* card / form background */
+  --color-bg-subtle:  #f5f0ea;   /* chart fill, hover states */
+
+  /* Semantic aliases */
+  --color-primary:        var(--color-rose-500);
+  --color-primary-light:  var(--color-rose-100);
+  --color-success:        var(--color-sage-400);
+  --color-success-light:  var(--color-sage-100);
+  --color-info:           var(--color-blue-400);
+  --color-info-light:     var(--color-blue-100);
+  --color-warning:        var(--color-ochre-400);
+  --color-warning-light:  var(--color-ochre-100);
+  --color-border:         #f0ebe4;
+  --color-border-strong:  var(--color-ink-100);
+
+
+  /* ── Typography ────────────────────────────────────────────────────────── */
+
+  --font-display: 'DM Serif Display', Georgia, serif;
+  --font-body:    'DM Sans', system-ui, sans-serif;
+
+  /* Scale */
+  --text-xs:   10px;
+  --text-sm:   11px;
+  --text-base: 13px;
+  --text-md:   14px;
+  --text-lg:   16px;
+  --text-xl:   20px;
+  --text-2xl:  22px;
+  --text-3xl:  28px;
+
+  /* Weight */
+  --font-light:   300;
+  --font-regular: 400;
+  --font-medium:  500;
+
+  /* Tracking */
+  --tracking-wide:   0.5px;
+  --tracking-wider:  1px;
+  --tracking-widest: 1.5px;
+  --tracking-caps:   2px;
+
+
+  /* ── Spacing scale (4-pt grid) ─────────────────────────────────────────── */
+
+  --space-1:  4px;
+  --space-2:  6px;
+  --space-3:  8px;
+  --space-4:  10px;
+  --space-5:  12px;
+  --space-6:  14px;
+  --space-7:  16px;
+  --space-8:  18px;
+  --space-9:  20px;
+  --space-10: 24px;
+  --space-11: 28px;
+  --space-12: 32px;
+
+
+  /* ── Border radius ─────────────────────────────────────────────────────── */
+
+  --radius-sm:   4px;
+  --radius-md:   6px;
+  --radius-lg:   8px;
+  --radius-xl:   10px;
+  --radius-2xl:  12px;
+  --radius-3xl:  14px;
+  --radius-pill: 20px;
+  --radius-full: 9999px;
+
+
+  /* ── Shadows ───────────────────────────────────────────────────────────── */
+
+  --shadow-sm:  0 2px 8px  rgba(0, 0, 0, 0.06);
+  --shadow-md:  0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-lg:  0 8px 24px rgba(0, 0, 0, 0.10);
+  --shadow-xl:  0 12px 32px rgba(0, 0, 0, 0.12);
+
+
+  /* ── Layout ────────────────────────────────────────────────────────────── */
+
+  --max-width:       430px;
+  --bottom-nav-h:    68px;    /* height of the fixed TabBar */
+  --header-padding:  28px;
+
+
+  /* ── Transitions ───────────────────────────────────────────────────────── */
+
+  --transition-fast:   0.12s ease;
+  --transition-base:   0.20s ease;
+  --transition-slow:   0.30s ease;
+
+
+  /* ── Z-index scale ─────────────────────────────────────────────────────── */
+
+  --z-content:   1;
+  --z-sticky:    10;
+  --z-nav:       100;
+  --z-dropdown:  200;
+  --z-overlay:   300;
+  --z-toast:     999;
+}
