@@ -22,48 +22,46 @@ export const STORAGE_KEYS = {
 };
 
 /**
- * Helper — safely read a JSON value from storage.
+ * Helper — safely read a JSON value from localStorage.
  * Returns the parsed value, or `fallback` if the key is missing or parse fails.
  *
  * @template T
  * @param {string}  key       - storage key
  * @param {T}       fallback  - value returned when the key is not found
- * @returns {Promise<T>}
+ * @returns {T}
  */
-export async function storageGet(key, fallback = null) {
+export function storageGet(key, fallback = null) {
   try {
-    const result = await window.storage.get(key);
-    return result ? JSON.parse(result.value) : fallback;
+    const raw = localStorage.getItem(key);
+    return raw !== null ? JSON.parse(raw) : fallback;
   } catch {
     return fallback;
   }
 }
 
 /**
- * Helper — safely write a JSON value to storage.
+ * Helper — safely write a JSON value to localStorage.
  * Silently swallows errors (e.g. storage quota exceeded).
  *
  * @param {string} key    - storage key
  * @param {*}      value  - any JSON-serialisable value
- * @returns {Promise<void>}
  */
-export async function storageSet(key, value) {
+export function storageSet(key, value) {
   try {
-    await window.storage.set(key, JSON.stringify(value));
+    localStorage.setItem(key, JSON.stringify(value));
   } catch {
     // Storage write failed — app continues without persistence
   }
 }
 
 /**
- * Helper — safely delete a key from storage.
+ * Helper — safely delete a key from localStorage.
  *
  * @param {string} key - storage key
- * @returns {Promise<void>}
  */
-export async function storageDelete(key) {
+export function storageDelete(key) {
   try {
-    await window.storage.delete(key);
+    localStorage.removeItem(key);
   } catch {
     // Ignore
   }

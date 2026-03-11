@@ -2,141 +2,168 @@ import { useState } from "react";
 import Icon from "../../common/Icon";
 
 /**
- * LifestyleForm — form for logging daily lifestyle data.
- *
- * Props:
- *  - onSave   {fn}  callback({ stress, sleep, exercise, diet, weight })
+ * LifestyleForm — daily wellness journal form.
+ * Tracks mood, energy, water, exercise, sleep, and a free-text note.
+ * Intentionally different from period logging — focuses on how you FEEL each day.
  */
 
-const SLIDERS = [
-  {
-    key:     "stress",
-    label:   "Stress Level",
-    icon:    "sentiment_dissatisfied",
-    color:   "#c4837a",
-    min:     1,
-    max:     10,
-    step:    1,
-    display: (v) => `${v}/10`,
-  },
-  {
-    key:     "sleep",
-    label:   "Sleep",
-    icon:    "bedtime",
-    color:   "#6aab8e",
-    min:     3,
-    max:     12,
-    step:    1,
-    display: (v) => `${v}h`,
-  },
-  {
-    key:     "exercise",
-    label:   "Exercise",
-    icon:    "directions_run",
-    color:   "#7a9ec4",
-    min:     0,
-    max:     120,
-    step:    5,
-    display: (v) => `${v}m`,
-  },
+const MOODS = [
+  { key: "great",   label: "Great",   icon: "sentiment_very_satisfied", color: "#6aab8e" },
+  { key: "good",    label: "Good",    icon: "sentiment_satisfied",      color: "#7a9ec4" },
+  { key: "okay",    label: "Okay",    icon: "sentiment_neutral",        color: "#b5a66e" },
+  { key: "low",     label: "Low",     icon: "sentiment_dissatisfied",   color: "#c4837a" },
+  { key: "awful",   label: "Awful",   icon: "sentiment_very_dissatisfied", color: "#b85a52" },
 ];
 
-const INITIAL = { stress: 5, sleep: 7, exercise: 30, diet: "good", weight: "" };
+const ENERGY = [
+  { key: "high",    label: "High",    color: "#6aab8e" },
+  { key: "medium",  label: "Medium",  color: "#b5a66e" },
+  { key: "low",     label: "Low",     color: "#c4837a" },
+  { key: "crashed", label: "Crashed", color: "#b85a52" },
+];
+
+const INITIAL = {
+  mood:     "good",
+  energy:   "medium",
+  water:    6,
+  sleep:    7,
+  exercise: 0,
+  note:     "",
+};
 
 export default function LifestyleForm({ onSave }) {
   const [form,  setForm]  = useState(INITIAL);
   const [saved, setSaved] = useState(false);
 
-  const handleChange = (key, value) => setForm((f) => ({ ...f, [key]: value }));
+  const set = (key, val) => setForm((f) => ({ ...f, [key]: val }));
 
   const handleSave = () => {
     onSave(form);
     setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
+    setTimeout(() => { setSaved(false); setForm(INITIAL); }, 1800);
   };
 
   return (
     <div style={styles.card}>
-      {/* Section header */}
       <div style={styles.header}>
         <Icon name="edit_note" size={18} color="#7a9ec4" />
-        <p style={styles.headerLabel}>Log Today</p>
+        <p style={styles.headerLabel}>Today's Wellness Check-in</p>
       </div>
 
-      {/* Sliders */}
-      {SLIDERS.map((s) => (
-        <div key={s.key} style={styles.sliderRow}>
+      {/* Mood selector */}
+      <p style={styles.sectionLabel}>
+        <Icon name="mood" size={14} color="#a09488" /> How are you feeling?
+      </p>
+      <div style={styles.moodRow}>
+        {MOODS.map((m) => {
+          const active = form.mood === m.key;
+          return (
+            <button
+              key={m.key}
+              style={{
+                ...styles.moodBtn,
+                background: active ? m.color + "22" : "#faf9f7",
+                borderColor: active ? m.color : "#e0d9d2",
+              }}
+              onClick={() => set("mood", m.key)}
+            >
+              <Icon name={m.icon} size={22} color={active ? m.color : "#c8bfb5"} />
+              <span style={{ ...styles.moodLabel, color: active ? m.color : "#a09488" }}>
+                {m.label}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Energy level */}
+      <p style={styles.sectionLabel}>
+        <Icon name="bolt" size={14} color="#a09488" /> Energy level
+      </p>
+      <div style={styles.energyRow}>
+        {ENERGY.map((e) => {
+          const active = form.energy === e.key;
+          return (
+            <button
+              key={e.key}
+              style={{
+                ...styles.energyBtn,
+                background:  active ? e.color + "22" : "#faf9f7",
+                borderColor: active ? e.color : "#e0d9d2",
+                color:       active ? e.color : "#6a5f58",
+                fontWeight:  active ? 500 : 400,
+              }}
+              onClick={() => set("energy", e.key)}
+            >
+              {e.label}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Sliders row */}
+      <div style={styles.slidersGrid}>
+        {/* Water */}
+        <div style={styles.sliderBlock}>
           <div style={styles.sliderTop}>
             <div style={styles.sliderLabelWrap}>
-              <Icon name={s.icon} size={15} color={s.color} />
-              <span style={styles.sliderLabel}>{s.label}</span>
+              <Icon name="water_drop" size={13} color="#7a9ec4" />
+              <span style={styles.sliderLabel}>Water</span>
             </div>
-            <span style={{ ...styles.sliderValue, color: s.color }}>
-              {s.display(form[s.key])}
-            </span>
+            <span style={{ ...styles.sliderVal, color: "#7a9ec4" }}>{form.water} gl</span>
           </div>
-          <input
-            type="range"
-            min={s.min}
-            max={s.max}
-            step={s.step}
-            value={form[s.key]}
-            onChange={(e) => handleChange(s.key, +e.target.value)}
-            style={styles.range}
-          />
-        </div>
-      ))}
-
-      {/* Diet + Weight row */}
-      <div style={styles.bottomRow}>
-        {/* Diet */}
-        <div style={styles.selectWrap}>
-          <div style={styles.sliderLabelWrap}>
-            <Icon name="restaurant" size={14} color="#b5a66e" />
-            <span style={styles.sliderLabel}>Diet Quality</span>
-          </div>
-          <select
-            value={form.diet}
-            onChange={(e) => handleChange("diet", e.target.value)}
-            style={styles.select}
-          >
-            <option value="poor">Poor</option>
-            <option value="okay">Okay</option>
-            <option value="good">Good</option>
-            <option value="great">Great</option>
-          </select>
+          <input type="range" min={0} max={12} step={1} value={form.water}
+            onChange={(e) => set("water", +e.target.value)} style={styles.range} />
         </div>
 
-        {/* Weight */}
-        <div style={styles.weightWrap}>
-          <div style={styles.sliderLabelWrap}>
-            <Icon name="monitor_weight" size={14} color="#b5a66e" />
-            <span style={styles.sliderLabel}>Weight (kg)</span>
+        {/* Sleep */}
+        <div style={styles.sliderBlock}>
+          <div style={styles.sliderTop}>
+            <div style={styles.sliderLabelWrap}>
+              <Icon name="bedtime" size={13} color="#6aab8e" />
+              <span style={styles.sliderLabel}>Sleep</span>
+            </div>
+            <span style={{ ...styles.sliderVal, color: "#6aab8e" }}>{form.sleep}h</span>
           </div>
-          <input
-            type="number"
-            value={form.weight}
-            placeholder="58.0"
-            step="0.1"
-            onChange={(e) => handleChange("weight", e.target.value)}
-            style={styles.numberInput}
-          />
+          <input type="range" min={3} max={12} step={1} value={form.sleep}
+            onChange={(e) => set("sleep", +e.target.value)} style={styles.range} />
+        </div>
+
+        {/* Exercise */}
+        <div style={styles.sliderBlock}>
+          <div style={styles.sliderTop}>
+            <div style={styles.sliderLabelWrap}>
+              <Icon name="directions_run" size={13} color="#b5a66e" />
+              <span style={styles.sliderLabel}>Move</span>
+            </div>
+            <span style={{ ...styles.sliderVal, color: "#b5a66e" }}>{form.exercise}m</span>
+          </div>
+          <input type="range" min={0} max={120} step={5} value={form.exercise}
+            onChange={(e) => set("exercise", +e.target.value)} style={styles.range} />
         </div>
       </div>
 
-      {/* Save button */}
+      {/* Daily note */}
+      <p style={styles.sectionLabel}>
+        <Icon name="notes" size={14} color="#a09488" /> Daily note (optional)
+      </p>
+      <textarea
+        rows={2}
+        value={form.note}
+        placeholder="How did today feel? Any observations..."
+        onChange={(e) => set("note", e.target.value)}
+        style={styles.textarea}
+      />
+
       <button style={styles.saveBtn} onClick={handleSave}>
-        {saved ? (
-          <><Icon name="check" size={16} color="#faf9f7" /> Saved</>
-        ) : (
-          "Save Today's Log"
-        )}
+        {saved
+          ? <><Icon name="check" size={16} color="#faf9f7" /> Saved</>
+          : "Save Check-in"
+        }
       </button>
     </div>
   );
 }
-
-// ── Styles ────────────────────────────────────────────────────────────────────
 
 const styles = {
   card: {
@@ -147,106 +174,73 @@ const styles = {
     marginBottom: 20,
   },
   header: {
-    display: "flex",
-    alignItems: "center",
-    gap: 8,
-    marginBottom: 18,
+    display: "flex", alignItems: "center", gap: 8, marginBottom: 16,
   },
   headerLabel: {
-    fontSize: 11,
-    letterSpacing: 1.5,
-    textTransform: "uppercase",
-    color: "#a09488",
+    fontSize: 11, letterSpacing: 1.5, textTransform: "uppercase", color: "#a09488",
+  },
+  sectionLabel: {
+    display: "flex", alignItems: "center", gap: 5,
+    fontSize: 12, fontWeight: 500, color: "#4a3f3a", marginBottom: 8,
   },
 
-  // Slider
-  sliderRow: {
-    marginBottom: 16,
+  // Mood
+  moodRow: {
+    display: "flex", gap: 6, marginBottom: 16,
   },
+  moodBtn: {
+    flex: 1, display: "flex", flexDirection: "column", alignItems: "center",
+    gap: 4, border: "1.5px solid", borderRadius: 10, padding: "8px 2px",
+    cursor: "pointer", fontFamily: "'DM Sans', sans-serif", transition: "all 0.15s",
+  },
+  moodLabel: {
+    fontSize: 9, letterSpacing: 0.3,
+  },
+
+  // Energy
+  energyRow: {
+    display: "flex", gap: 6, marginBottom: 16,
+  },
+  energyBtn: {
+    flex: 1, border: "1.5px solid", borderRadius: 8,
+    padding: "7px 0", fontFamily: "'DM Sans', sans-serif",
+    fontSize: 12, cursor: "pointer", transition: "all 0.15s",
+  },
+
+  // Sliders
+  slidersGrid: {
+    display: "flex", flexDirection: "column", gap: 12, marginBottom: 16,
+  },
+  sliderBlock: {},
   sliderTop: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 6,
+    display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 5,
   },
   sliderLabelWrap: {
-    display: "flex",
-    alignItems: "center",
-    gap: 6,
+    display: "flex", alignItems: "center", gap: 5,
   },
   sliderLabel: {
-    fontSize: 13,
-    fontWeight: 500,
-    color: "#2a2420",
+    fontSize: 12, fontWeight: 500, color: "#2a2420",
   },
-  sliderValue: {
-    fontSize: 13,
-    fontWeight: 500,
+  sliderVal: {
+    fontSize: 12, fontWeight: 500,
   },
   range: {
-    WebkitAppearance: "none",
-    width: "100%",
-    height: 4,
-    borderRadius: 2,
-    background: "#e0d9d2",
-    outline: "none",
-    cursor: "pointer",
+    WebkitAppearance: "none", width: "100%", height: 4,
+    borderRadius: 2, background: "#e0d9d2", outline: "none", cursor: "pointer",
   },
 
-  // Diet + Weight
-  bottomRow: {
-    display: "flex",
-    gap: 12,
-    alignItems: "flex-end",
-    marginBottom: 18,
-  },
-  selectWrap: {
-    flex: 1,
-    display: "flex",
-    flexDirection: "column",
-    gap: 6,
-  },
-  select: {
-    fontFamily: "'DM Sans', sans-serif",
-    fontSize: 13,
-    border: "1px solid #e0d9d2",
-    borderRadius: 6,
-    padding: "7px 10px",
-    background: "#fff",
-    color: "#2a2420",
-    outline: "none",
-  },
-  weightWrap: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 6,
-  },
-  numberInput: {
-    fontFamily: "'DM Sans', sans-serif",
-    fontSize: 13,
-    border: "1px solid #e0d9d2",
-    borderRadius: 6,
-    padding: "7px 10px",
-    width: 84,
-    outline: "none",
-    color: "#2a2420",
+  // Note
+  textarea: {
+    fontFamily: "'DM Sans', sans-serif", fontSize: 13,
+    border: "1px solid #e0d9d2", borderRadius: 6, padding: "8px 10px",
+    background: "#fff", color: "#2a2420", outline: "none",
+    resize: "none", width: "100%", marginBottom: 16, lineHeight: 1.5,
   },
 
-  // Save
   saveBtn: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 6,
-    width: "100%",
-    background: "#2a2420",
-    color: "#faf9f7",
-    border: "none",
-    borderRadius: 8,
-    padding: "10px 24px",
-    fontFamily: "'DM Sans', sans-serif",
-    fontSize: 14,
-    cursor: "pointer",
-    letterSpacing: 0.5,
+    display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+    width: "100%", background: "#2a2420", color: "#faf9f7",
+    border: "none", borderRadius: 8, padding: "10px 24px",
+    fontFamily: "'DM Sans', sans-serif", fontSize: 14, cursor: "pointer", letterSpacing: 0.5,
   },
 };

@@ -8,10 +8,10 @@ import { daysBetween } from "../utils/dateUtils";
  * Remove or replace with an empty array [] in production.
  */
 const SAMPLE_PERIODS = [
-  { id: 1, start: "2026-01-28", end: "2026-02-01", flow: "medium", symptoms: ["cramps", "bloating"],     notes: "Started on time" },
-  { id: 2, start: "2025-12-21", end: "2025-12-26", flow: "heavy",  symptoms: ["cramps", "headache"],     notes: "Heavier than usual" },
-  { id: 3, start: "2025-11-09", end: "2025-11-13", flow: "light",  symptoms: ["fatigue"],                notes: "" },
-  { id: 4, start: "2025-10-02", end: "2025-10-06", flow: "medium", symptoms: ["bloating", "moodswings"], notes: "" },
+  // { id: 1, start: "2026-01-28", end: "2026-02-01", flow: "medium", symptoms: ["cramps", "bloating"],     notes: "Started on time" },
+  // { id: 2, start: "2025-12-21", end: "2025-12-26", flow: "heavy",  symptoms: ["cramps", "headache"],     notes: "Heavier than usual" },
+  // { id: 3, start: "2025-11-09", end: "2025-11-13", flow: "light",  symptoms: ["fatigue"],                notes: "" },
+  // { id: 4, start: "2025-10-02", end: "2025-10-06", flow: "medium", symptoms: ["bloating", "moodswings"], notes: "" },
 ];
 
 /**
@@ -71,8 +71,8 @@ export function usePeriods() {
   }, [setPeriods]);
 
   /** Remove all periods from state and storage. */
-  const clearAll = useCallback(async () => {
-    await removeAll();
+  const clearAll = useCallback(() => {
+    removeAll();
   }, [removeAll]);
 
   // ── Stats ───────────────────────────────────────────────────────────────────

@@ -1,100 +1,91 @@
 import Icon from "../../common/Icon";
 
 /**
- * PatternsPanel — shows detected lifestyle-to-cycle correlation patterns.
- *
- * Props:
- *  - logs     {Array}  lifestyle log entries (used for dynamic pattern calc)
- *
- * Currently shows static insight cards. When enough logs exist,
- * the patterns are computed from real data.
+ * PatternsPanel — shows a mood & energy streak summary from recent logs.
+ * Now shows real patterns from actual check-in data.
  */
 
-const STATIC_PATTERNS = [
-  {
-    icon:      "sentiment_dissatisfied",
-    iconColor: "#c4837a",
-    bg:        "#fdf0ee",
-    label:     "High stress lengthens cycles",
-    detail:    "Average +6 days when stress level is high",
-  },
-  {
-    icon:      "nightlight",
-    iconColor: "#7a9ec4",
-    bg:        "#f0f5fd",
-    label:     "Poor sleep increases spotting",
-    detail:    "Spotting twice as common after fewer than 6h sleep",
-  },
-  {
-    icon:      "nutrition",
-    iconColor: "#6aab8e",
-    bg:        "#eef7f2",
-    label:     "Good diet lightens flow",
-    detail:    "Flow intensity drops by one level on great diet days",
-  },
-];
+const MOOD_ORDER = ["great", "good", "okay", "low", "awful"];
 
 export default function PatternsPanel({ logs = [] }) {
-  // Compute dynamic average stress from real logs if available
-  const avgStress = logs.length
-    ? (logs.reduce((a, b) => a + b.stress, 0) / logs.length).toFixed(1)
-    : null;
+  if (logs.length === 0) return null;
 
-  const highStressCount = logs.filter((l) => l.stress >= 7).length;
-  const poorSleepCount  = logs.filter((l) => l.sleep < 6).length;
-  const greatDietCount  = logs.filter((l) => l.diet === "great").length;
+  const recent = logs.slice(0, 7);
 
-  // Enrich static patterns with real counts when data is available
-  const patterns = STATIC_PATTERNS.map((p, i) => {
-    let dynamicDetail = p.detail;
-    if (logs.length >= 4) {
-      if (i === 0 && highStressCount > 0)
-        dynamicDetail = `${highStressCount} high-stress day${highStressCount !== 1 ? "s" : ""} logged — watch cycle length`;
-      if (i === 1 && poorSleepCount > 0)
-        dynamicDetail = `${poorSleepCount} night${poorSleepCount !== 1 ? "s" : ""} under 6h sleep recorded`;
-      if (i === 2 && greatDietCount > 0)
-        dynamicDetail = `${greatDietCount} great diet day${greatDietCount !== 1 ? "s" : ""} logged — keep it up`;
-    }
-    return { ...p, detail: dynamicDetail };
-  });
+  // Mood streak
+  const moodCounts = {};
+  recent.forEach((l) => { moodCounts[l.mood] = (moodCounts[l.mood] || 0) + 1; });
+  const topMood = Object.entries(moodCounts).sort((a, b) => b[1] - a[1])[0];
+
+  // Avg sleep
+  const avgSleep = (recent.reduce((s, l) => s + (l.sleep || 0), 0) / recent.length).toFixed(1);
+
+  // Avg water
+  const avgWater = (recent.reduce((s, l) => s + (l.water || 0), 0) / recent.length).toFixed(1);
+
+  // Low energy days
+  const lowEnergyDays = recent.filter((l) => l.energy === "low" || l.energy === "crashed").length;
+
+  const insights = [
+    {
+      icon:  "auto_awesome",
+      color: "#7a9ec4",
+      bg:    "#f0f5fd",
+      text:  topMood
+        ? `Most common mood lately: ${topMood[0]} (${topMood[1]}/${recent.length} days)`
+        : "Keep logging to see mood patterns",
+    },
+    {
+      icon:  "bedtime",
+      color: "#6aab8e",
+      bg:    "#eef7f2",
+      text:  `Averaging ${avgSleep}h of sleep over the last ${recent.length} days`,
+    },
+    {
+      icon:  "water_drop",
+      color: "#7a9ec4",
+      bg:    "#f0f5fd",
+      text:  `Drinking ${avgWater} glasses of water on average`,
+    },
+    lowEnergyDays > 0 && {
+      icon:  "battery_low",
+      color: "#c4837a",
+      bg:    "#fdf0ee",
+      text:  `${lowEnergyDays} low/crashed energy day${lowEnergyDays > 1 ? "s" : ""} in the past week`,
+    },
+  ].filter(Boolean);
 
   return (
     <div style={styles.card}>
-      {/* Header */}
       <div style={styles.header}>
         <Icon name="insights" size={16} color="#a09488" />
-        <p style={styles.headerLabel}>Patterns Detected</p>
-        {avgStress && (
-          <span style={styles.avgBadge}>
-            Avg stress {avgStress}/10
-          </span>
-        )}
+        <p style={styles.headerLabel}>This Week at a Glance</p>
       </div>
 
-      {/* Pattern cards */}
-      {patterns.map((p, i) => (
-        <div key={i} style={{ ...styles.patternRow, background: p.bg }}>
-          <div style={styles.iconWrap}>
-            <Icon name={p.icon} size={22} color={p.iconColor} />
-          </div>
-          <div style={styles.patternText}>
-            <p style={styles.patternLabel}>{p.label}</p>
-            <p style={styles.patternDetail}>{p.detail}</p>
-          </div>
+      {/* Mood strip */}
+      <div style={styles.moodStrip}>
+        {recent.map((l, i) => {
+          const colors = { great:"#6aab8e", good:"#7a9ec4", okay:"#b5a66e", low:"#c4837a", awful:"#b85a52" };
+          const c = colors[l.mood] || "#c8bfb5";
+          return (
+            <div key={i} style={styles.moodDot} title={`${l.date} — ${l.mood}`}>
+              <div style={{ ...styles.dot, background: c }} />
+              <span style={styles.dotDate}>{l.date.slice(5)}</span>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Insight rows */}
+      {insights.map((ins, i) => (
+        <div key={i} style={{ ...styles.insightRow, background: ins.bg }}>
+          <Icon name={ins.icon} size={18} color={ins.color} />
+          <p style={styles.insightText}>{ins.text}</p>
         </div>
       ))}
-
-      {/* Empty state */}
-      {logs.length === 0 && (
-        <p style={styles.empty}>
-          Log a few days of lifestyle data to see personalised patterns.
-        </p>
-      )}
     </div>
   );
 }
-
-// ── Styles ────────────────────────────────────────────────────────────────────
 
 const styles = {
   card: {
@@ -105,61 +96,32 @@ const styles = {
     marginBottom: 20,
   },
   header: {
-    display: "flex",
-    alignItems: "center",
-    gap: 8,
-    marginBottom: 14,
+    display: "flex", alignItems: "center", gap: 8, marginBottom: 14,
   },
   headerLabel: {
-    fontSize: 11,
-    letterSpacing: 1.5,
-    textTransform: "uppercase",
-    color: "#a09488",
-    flex: 1,
-  },
-  avgBadge: {
-    fontSize: 11,
-    color: "#c4837a",
-    background: "#fdf0ee",
-    borderRadius: 4,
-    padding: "2px 8px",
+    fontSize: 11, letterSpacing: 1.5, textTransform: "uppercase", color: "#a09488",
   },
 
-  // Pattern row
-  patternRow: {
-    display: "flex",
-    alignItems: "center",
-    gap: 12,
-    borderRadius: 10,
-    padding: "10px 14px",
-    marginBottom: 8,
+  // Mood dot strip
+  moodStrip: {
+    display: "flex", gap: 6, marginBottom: 14, flexWrap: "wrap",
   },
-  iconWrap: {
-    flexShrink: 0,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+  moodDot: {
+    display: "flex", flexDirection: "column", alignItems: "center", gap: 3,
   },
-  patternText: {
-    flex: 1,
+  dot: {
+    width: 10, height: 10, borderRadius: "50%",
   },
-  patternLabel: {
-    fontSize: 13,
-    fontWeight: 500,
-    color: "#2a2420",
-  },
-  patternDetail: {
-    fontSize: 11,
-    color: "#8a7f78",
-    marginTop: 2,
-    lineHeight: 1.4,
+  dotDate: {
+    fontSize: 9, color: "#c8bfb5",
   },
 
-  empty: {
-    fontSize: 12,
-    color: "#b0a49a",
-    textAlign: "center",
-    padding: "8px 0 4px",
-    lineHeight: 1.5,
+  // Insight row
+  insightRow: {
+    display: "flex", alignItems: "center", gap: 10,
+    borderRadius: 8, padding: "9px 12px", marginBottom: 6,
+  },
+  insightText: {
+    fontSize: 12, color: "#4a3f3a", lineHeight: 1.4,
   },
 };
